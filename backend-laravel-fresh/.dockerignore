@@ -1,0 +1,14 @@
+vendor/
+node_modules/
+.env
+.env.*
+database/*.sqlite*
+storage/logs/*
+!storage/logs/.gitignore
+bootstrap/cache/*.php
+composer.phar
+composer-setup.php
+*.txt
+*.json
+!composer.json
+!composer.lock

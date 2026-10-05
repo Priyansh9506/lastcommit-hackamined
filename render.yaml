@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: techmicra-erp-api
+    runtime: docker
+    plan: free
+    region: singapore
+    rootDir: backend-laravel-fresh
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /up
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY
+        sync: false # output of `php artisan key:generate --show`
+      - key: APP_URL
+        sync: false # https://<service>.onrender.com
+      - key: DB_CONNECTION
+        value: sqlite
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: CACHE_STORE
+        value: file
+      - key: SESSION_DRIVER
+        value: file
+      - key: PHP_CLI_SERVER_WORKERS
+        value: "4"
+      - key: GROQ_API_KEY
+        sync: false
+      - key: COMPANY_GSTIN
+        sync: false

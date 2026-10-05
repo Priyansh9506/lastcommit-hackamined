@@ -44,53 +44,6 @@ Route::prefix('v1')->group(function () {
         'timestamp' => now()->toISOString(),
     ]));
 
-    Route::get('run-seed', function () {
-        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'SyntheticDataSeeder']);
-        return \Illuminate\Support\Facades\Artisan::output();
-    });
-
-    Route::get('fix-models', function () {
-        $files = glob(app_path() . '/Models/*.php');
-        $count = 0;
-        foreach ($files as $file) {
-            $content = file_get_contents($file);
-            if (strpos($content, 'public $timestamps = false;') !== false) {
-                $content = preg_replace(
-                    '/^\s*public\s+\$timestamps\s*=\s*false;.*$/m',
-                    "\n    const CREATED_AT = 'createdAt';\n    const UPDATED_AT = 'updatedAt';",
-                    $content
-                );
-                file_put_contents($file, $content);
-                $count++;
-            }
-        }
-        return ['status' => 'success', 'modified_files' => $count];
-    });
-
-    Route::get('test-login', function () {
-        $email = 'admin@erp.com';
-        $user = \App\Models\User::where('email', $email)->first();
-        if (!$user)
-            return 'No user';
-
-        $user->password = \Illuminate\Support\Facades\Hash::make('password');
-        $user->save();
-
-        $match = \Illuminate\Support\Facades\Hash::check('password', $user->password);
-
-        $userWithQuery = \App\Models\User::where('email', $email)
-            ->where('isActive', true)
-            ->whereNull('deletedAt')
-            ->first();
-
-        return [
-            'status' => 'Password reset to password.',
-            'password_match' => $match,
-            'auth_query_works' => $userWithQuery !== null
-
-        ];
-    });
-
     // ─── Protected Routes ─────────────────────────────────────────────────────
     Route::middleware('auth:sanctum')->group(function () {
 
